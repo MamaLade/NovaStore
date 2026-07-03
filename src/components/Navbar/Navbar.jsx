@@ -1,50 +1,114 @@
 import "./Navbar.css";
 import {
-  FaShoppingCart,
-  FaUser,
+  FaHeart,
+  FaMoon,
   FaSearch,
+  FaShoppingBag,
+  FaShoppingCart,
+  FaSignOutAlt,
+  FaSun,
+  FaUser,
+  FaCog,
 } from "react-icons/fa";
-
 import { useCart } from "../../context/CartContext";
+import { useTheme } from "../../context/ThemeContext";
+import { useToast } from "../../context/ToastContext";
+import { useNavigate } from "react-router-dom";
+import NotificationCenter from "../NotificationCenter/NotificationCenter";
 
-function Navbar({ openCart }) {
-  const { totalQuantity } = useCart();
+function Navbar({ openCart, search, setSearch, openAuth }) {
+  const { totalQuantity, wishlistCount, user, logout } = useCart();
+  const { theme, toggleTheme } = useTheme();
+  const { showToast } = useToast();
+  const navigate = useNavigate();
+
+  const handleProfileClick = () => {
+    if (user) {
+      navigate("/profile");
+      return;
+    }
+
+    openAuth?.("login");
+  };
+
+  const handleLogout = () => {
+    logout();
+    showToast("Đã đăng xuất.", "info");
+    navigate("/");
+  };
 
   return (
-    <nav className="navbar">
-      <div className="logo">
-        <h2>NovaStore</h2>
-      </div>
-
-      <div className="search-box">
-        <input
-          type="text"
-          placeholder="Tìm kiếm sản phẩm..."
-        />
-
-        <button>
-          <FaSearch />
-        </button>
-      </div>
-
-      <div className="menu">
-        <a href="#">Trang chủ</a>
-        <a href="#">Sản phẩm</a>
-        <a href="#">Liên hệ</a>
-      </div>
-
-      <div className="actions">
-        <FaUser className="icon" />
-
-        <div className="cart" onClick={openCart}>
-          <FaShoppingCart className="icon" />
-
-          <span className="cart-count">
-            {totalQuantity}
+    <header className="navbar">
+      <div className="nav-inner">
+        <button className="logo" onClick={() => navigate("/")} type="button">
+          <span className="logo-mark">
+            <FaShoppingBag />
           </span>
+          <span>NovaStore</span>
+        </button>
+
+        <div className="search">
+          <FaSearch />
+          <input
+            value={search}
+            placeholder="Tìm sản phẩm, thương hiệu..."
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+
+        <div className="actions">
+          <button
+            className="nav-icon-btn"
+            onClick={toggleTheme}
+            type="button"
+            aria-label={theme === "dark" ? "Bật sáng" : "Bật tối"}
+          >
+            {theme === "dark" ? <FaSun /> : <FaMoon />}
+          </button>
+
+          <button className="nav-icon-btn" onClick={() => navigate("/profile")} type="button">
+            <FaHeart />
+            {wishlistCount > 0 && <span className="badge">{wishlistCount}</span>}
+          </button>
+
+          <NotificationCenter />
+
+          <button className="nav-icon-btn" onClick={openCart} type="button">
+            <FaShoppingCart />
+            {totalQuantity > 0 && <span className="badge">{totalQuantity}</span>}
+          </button>
+
+          {user ? (
+            <div className="user-menu">
+              {user.role === "admin" && (
+                <button className="admin-btn" onClick={() => navigate("/admin")} type="button">
+                  <FaCog />
+                  <span>Admin</span>
+                </button>
+              )}
+              <button className="user-chip" onClick={handleProfileClick} type="button">
+                <FaUser />
+                <span>{user.name}</span>
+              </button>
+
+              <button className="logout-btn" onClick={handleLogout} type="button">
+                <FaSignOutAlt />
+                <span>Đăng xuất</span>
+              </button>
+            </div>
+          ) : (
+            <div className="auth-actions">
+              <button className="login-btn" onClick={() => openAuth?.("login")} type="button">
+                Đăng nhập
+              </button>
+              <button className="register-btn" onClick={() => openAuth?.("register")} type="button">
+                Đăng ký
+              </button>
+            </div>
+          )}
         </div>
       </div>
-    </nav>
+    </header>
   );
 }
 

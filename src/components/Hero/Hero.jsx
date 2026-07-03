@@ -1,23 +1,37 @@
+import { FaShieldAlt, FaShippingFast, FaStar } from "react-icons/fa";
+import heroImage from "../../assets/hero.png";
 import "./Hero.css";
 
 function Hero() {
   return (
     <section className="hero">
-      <div className="hero-content">
-        <h1>Mua sắm dễ dàng</h1>
+      <div className="container hero-content">
+        <div className="hero-copy">
+          <span className="hero-kicker">Bộ sưu tập mới</span>
+          <h1>NovaStore Summer Sale</h1>
+          <p>
+            Nâng cấp tủ đồ với áo, quần và sneaker đang giảm giá mạnh trong tuần này.
+          </p>
 
-        <p>
-          Khám phá hàng ngàn sản phẩm chất lượng với giá ưu đãi mỗi ngày.
-        </p>
+          <div className="hero-actions">
+            <a href="#products" className="hero-primary">Mua ngay</a>
+            <a href="#products" className="hero-secondary">Xem sản phẩm</a>
+          </div>
 
-        <button>Mua ngay</button>
-      </div>
+          <div className="hero-benefits">
+            <span><FaShippingFast /> Giao nhanh</span>
+            <span><FaShieldAlt /> Đổi trả dễ dàng</span>
+            <span><FaStar /> Hàng chọn lọc</span>
+          </div>
+        </div>
 
-      <div className="hero-image">
-        <img
-          src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700"
-          alt="Hero"
-        />
+        <div className="hero-media">
+          <img src={heroImage} alt="NovaStore fashion sale" />
+          <div className="sale-card">
+            <span>Ưu đãi</span>
+            <b>Giảm đến 50%</b>
+          </div>
+        </div>
       </div>
     </section>
   );

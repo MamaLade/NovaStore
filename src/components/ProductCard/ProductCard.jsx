@@ -1,57 +1,91 @@
 import "./ProductCard.css";
-import {
-  FaHeart,
-  FaStar,
-  FaShoppingCart,
-} from "react-icons/fa";
-
+import { FaHeart, FaShoppingCart, FaStar, FaStore } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { formatCurrency } from "../../utils/formatters";
 import { useCart } from "../../context/CartContext";
 
-function ProductCard({ product }) {
-  const { addToCart } = useCart();
+function ProductCard({
+  product,
+  onAddToCart,
+  isWishlisted = false,
+  onToggleWishlist,
+}) {
+  const { getProductRating } = useCart();
+
+  if (!product) return null;
+
+  const discount = product.oldPrice
+    ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
+    : 0;
+
+  const productRating = getProductRating(product.id);
 
   return (
-    <div className="product-card">
-      <span className="discount">
-        {product.discount}
-      </span>
+    <div className="card">
+      <div className="image-box">
+        <Link to={`/product/${product.id}`}>
+          <img src={product.image} alt={product.name} loading="lazy" />
+        </Link>
 
-      <button className="favorite-btn">
-        <FaHeart />
-      </button>
+        {discount > 0 && <span className="discount">-{discount}%</span>}
 
-      <img
-        src={product.image}
-        alt={product.name}
-      />
-
-      <h3>{product.name}</h3>
-
-      <div className="rating">
-        <FaStar className="star" />
-        <span>{product.rating}</span>
+        <button
+          className={["heart-button", isWishlisted ? "liked" : ""]
+            .filter(Boolean)
+            .join(" ")}
+          onClick={() => onToggleWishlist?.(product)}
+          aria-label={isWishlisted ? "Bỏ yêu thích" : "Thêm vào yêu thích"}
+          type="button"
+        >
+          <FaHeart />
+        </button>
       </div>
 
-      <div className="price">
-        <span className="new-price">
-          {product.price.toLocaleString()}₫
-        </span>
+      <div className="info">
+        <Link to={`/product/${product.id}`}>
+          <h3 className="name">{product.name}</h3>
+        </Link>
 
-        <span className="old-price">
-          {product.oldPrice.toLocaleString()}₫
-        </span>
+        <div className="shop-line">
+          <FaStore />
+          <span>{product.shop?.name}</span>
+        </div>
+
+        {product.description && (
+          <p className="desc">
+            {product.description.length > 60
+              ? product.description.slice(0, 60) + "..."
+              : product.description}
+          </p>
+        )}
+
+        <div className="meta">
+          <div className="rating">
+            <FaStar className="star" />
+            <span>{productRating || "Chưa có"}</span>
+          </div>
+
+          <span className="sold">Đã bán {product.sold}</span>
+        </div>
+
+        <div className="option-preview">
+          <span>{product.sizes?.length || 0} size</span>
+          <span>{product.colors?.length || 0} màu</span>
+        </div>
+
+        <div className="price-box">
+          <span className="price">{formatCurrency(product.price)}</span>
+
+          {product.oldPrice && (
+            <span className="old-price">{formatCurrency(product.oldPrice)}</span>
+          )}
+        </div>
+
+        <button className="btn" onClick={() => onAddToCart?.(product)}>
+          <FaShoppingCart />
+          <span>Thêm vào giỏ</span>
+        </button>
       </div>
-
-      <button
-        className="cart-btn"
-        onClick={() => addToCart(product)}
-      >
-        <FaShoppingCart />
-
-        <span style={{ marginLeft: 8 }}>
-          Thêm vào giỏ
-        </span>
-      </button>
     </div>
   );
 }

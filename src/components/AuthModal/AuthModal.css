@@ -1,0 +1,110 @@
+.auth-overlay {
+  align-items: center;
+  background: var(--color-overlay);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 20px;
+  position: fixed;
+  z-index: 10000;
+}
+
+.auth-modal {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-modal);
+  max-width: 430px;
+  padding: 26px;
+  position: relative;
+  width: 100%;
+}
+
+.auth-close {
+  align-items: center;
+  background: var(--color-surface-hover);
+  border-radius: 50%;
+  color: var(--color-text-muted);
+  display: flex;
+  height: 36px;
+  justify-content: center;
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  width: 36px;
+}
+
+.auth-heading {
+  margin-bottom: 22px;
+  padding-right: 36px;
+}
+
+.auth-heading span {
+  color: var(--color-primary);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.auth-heading h2 {
+  color: var(--color-text);
+  font-size: 28px;
+  margin: 6px 0 8px;
+}
+
+.auth-heading p {
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.auth-field {
+  align-items: center;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-placeholder);
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 0 14px;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.auth-field:focus-within {
+  background: var(--color-surface);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(255, 77, 45, 0.12);
+}
+
+.auth-field input {
+  background: transparent;
+  border: 0;
+  color: var(--color-text);
+  flex: 1;
+  font-size: 15px;
+  outline: none;
+  padding: 14px 0;
+}
+
+.auth-message {
+  color: var(--color-error);
+  font-size: 14px;
+  margin: 8px 0 12px;
+}
+
+.auth-submit {
+  background: var(--color-primary);
+  border-radius: var(--radius-sm);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 13px;
+  width: 100%;
+}
+
+.auth-switch {
+  background: transparent;
+  color: var(--color-primary);
+  font-weight: 700;
+  margin-top: 14px;
+  width: 100%;
+}

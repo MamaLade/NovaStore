@@ -1,105 +1,93 @@
 import "./Cart.css";
 import { useCart } from "../../context/CartContext";
+import { Link } from "react-router-dom";
+import { formatCurrency } from "../../utils/formatters";
 
 function Cart({ isOpen, onClose }) {
   const {
     cart,
-    increaseQuantity,
-    decreaseQuantity,
+    increase,
+    decrease,
     removeItem,
     clearCart,
     totalPrice,
+    shippingFee,
+    grandTotal,
   } = useCart();
 
-  return (
-    <div
-      className={`cart-overlay ${isOpen ? "show" : ""}`}
-      onClick={onClose}
-    >
-      <div
-        className="cart-panel"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="cart-header">
-          <h2>🛒 Giỏ hàng</h2>
+  if (!isOpen) return null;
 
-          <button onClick={onClose}>✕</button>
+  return (
+    <div className="cart-overlay" onClick={onClose}>
+      <div className="cart-box" onClick={(e) => e.stopPropagation()}>
+        <div className="cart-header">
+          <h2>Giỏ hàng ({cart.length})</h2>
+          <button onClick={onClose} aria-label="Đóng giỏ hàng">
+            ×
+          </button>
         </div>
 
         {cart.length === 0 ? (
-          <div className="empty-cart">
-            <h3>Giỏ hàng đang trống</h3>
-            <p>Hãy thêm sản phẩm để bắt đầu mua sắm.</p>
+          <div className="empty">
+            <h3>Giỏ hàng trống</h3>
+            <p>Hãy thêm sản phẩm để tiếp tục mua sắm.</p>
           </div>
         ) : (
           <>
-            <div className="cart-body">
+            <div className="cart-list">
               {cart.map((item) => (
-                <div
-                  className="cart-item"
-                  key={item.id}
-                >
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                  />
+                <div className="cart-item" key={item.cartKey || item.id}>
+                  <img src={item.image} alt={item.name} />
 
-                  <div className="cart-info">
+                  <div className="info">
                     <h4>{item.name}</h4>
-
-                    <p className="price">
-                      {item.price.toLocaleString()}₫
-                    </p>
-
-                    <div className="quantity">
-                      <button
-                        onClick={() =>
-                          decreaseQuantity(item.id)
-                        }
-                      >
-                        -
-                      </button>
-
-                      <span>{item.quantity}</span>
-
-                      <button
-                        onClick={() =>
-                          increaseQuantity(item.id)
-                        }
-                      >
-                        +
-                      </button>
-                    </div>
-
-                    <button
-                      className="remove-btn"
-                      onClick={() =>
-                        removeItem(item.id)
-                      }
-                    >
-                      Xóa
-                    </button>
+                    <p>{formatCurrency(item.price)}</p>
+                    <small>
+                      {item.selectedSize && `Size: ${item.selectedSize}`}
+                      {item.selectedSize && item.selectedColor && " - "}
+                      {item.selectedColor && `Màu: ${item.selectedColor}`}
+                    </small>
+                    <small>
+                      Thành tiền: {formatCurrency(item.price * item.quantity)}
+                    </small>
                   </div>
+
+                  <div className="qty">
+                    <button onClick={() => decrease(item.cartKey || item.id)}>−</button>
+                    <span>{item.quantity}</span>
+                    <button onClick={() => increase(item.cartKey || item.id)}>+</button>
+                  </div>
+
+                  <button className="remove" onClick={() => removeItem(item.cartKey || item.id)}>
+                    ×
+                  </button>
                 </div>
               ))}
             </div>
 
             <div className="cart-footer">
-              <h3>
-                Tổng tiền:{" "}
-                {totalPrice.toLocaleString()}₫
-              </h3>
+              <div className="price-row">
+                <span>Tạm tính</span>
+                <b>{formatCurrency(totalPrice)}</b>
+              </div>
 
-              <button
-                className="checkout-btn"
-                onClick={() => {
-                  alert("Thanh toán thành công!");
-                  clearCart();
-                  onClose();
-                }}
-              >
-                Thanh toán
+              <div className="price-row">
+                <span>Phí vận chuyển</span>
+                <b>{formatCurrency(shippingFee)}</b>
+              </div>
+
+              <div className="price-row total">
+                <span>Tổng cộng</span>
+                <b>{formatCurrency(grandTotal)}</b>
+              </div>
+
+              <button className="clear-btn" onClick={clearCart}>
+                Xóa toàn bộ
               </button>
+
+              <Link to="/checkout" className="checkout-btn" onClick={onClose}>
+                Thanh toán
+              </Link>
             </div>
           </>
         )}
