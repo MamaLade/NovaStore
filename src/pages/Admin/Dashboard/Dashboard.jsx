@@ -1,11 +1,13 @@
 import { useMemo } from "react";
 import { FaBox, FaChartBar, FaShoppingCart, FaUsers } from "react-icons/fa";
 import { useCart } from "../../../context/CartContext";
+import { useNavigate } from "react-router-dom";
 import { formatCurrency } from "../../../utils/formatters";
 import "./Dashboard.css";
 
 function Dashboard() {
   const { orders, users, products } = useCart();
+  const navigate = useNavigate();
 
   const stats = useMemo(() => {
     const totalRevenue = (orders || []).reduce((sum, order) => sum + (order.total || 0), 0);
@@ -24,6 +26,49 @@ function Dashboard() {
   const recentOrders = useMemo(() => {
     return (orders || []).slice(0, 5);
   }, [orders]);
+
+  const revenueTrend = useMemo(() => {
+    const months = [...Array(6)].map((_, idx) => {
+      const date = new Date();
+      date.setMonth(date.getMonth() - (5 - idx));
+      return {
+        label: date.toLocaleString("vi-VN", { month: "short", year: "2-digit" }),
+        total: 0,
+      };
+    });
+
+    (orders || []).forEach((order) => {
+      const orderDate = new Date(order.id);
+      if (Number.isNaN(orderDate.getTime())) return;
+      const label = orderDate.toLocaleString("vi-VN", { month: "short", year: "2-digit" });
+      const month = months.find((item) => item.label === label);
+      if (month) {
+        month.total += order.total || 0;
+      }
+    });
+
+    return months;
+  }, [orders]);
+
+  const bestSellingProducts = useMemo(() => {
+    const salesCount = {};
+    (orders || []).forEach((order) => {
+      (order.items || []).forEach((item) => {
+        const productId = item.id || item.productId;
+        if (!productId) return;
+        salesCount[productId] = (salesCount[productId] || 0) + (item.quantity || 1);
+      });
+    });
+
+    return [...(products || [])]
+      .map((product) => ({
+        ...product,
+        salesCount: salesCount[product.id] || 0,
+      }))
+      .filter((product) => product.salesCount > 0)
+      .sort((a, b) => b.salesCount - a.salesCount)
+      .slice(0, 5);
+  }, [products, orders]);
 
   return (
     <div className="dashboard">
@@ -64,7 +109,7 @@ function Dashboard() {
           </div>
         </div>
 
-        <div className="stat-card users">
+        <div className="stat-card users" onClick={() => navigate('/admin/users')}>
           <div className="stat-icon">
             <FaUsers />
           </div>
@@ -72,6 +117,53 @@ function Dashboard() {
             <h3>Người dùng</h3>
             <p className="stat-value">{stats.totalUsers}</p>
             <span className="stat-label">Tổng người dùng</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="dashboard-charts">
+        <div className="chart-card">
+          <div className="chart-header">
+            <h2>Biểu đồ doanh thu</h2>
+            <span>6 tháng gần nhất</span>
+          </div>
+          <div className="chart-body">
+            <div className="chart-grid">
+              {revenueTrend.map((item) => {
+                const maxValue = Math.max(...revenueTrend.map((row) => row.total));
+                const barHeight = maxValue > 0 ? (item.total / maxValue) * 100 : 5;
+                return (
+                  <div key={item.label} className="chart-bar">
+                    <div className="bar-fill" style={{ height: `${barHeight}%` }} />
+                    <span className="chart-label">{item.label}</span>
+                    <span className="chart-value">{formatCurrency(item.total)}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        <div className="top-products-card">
+          <div className="chart-header">
+            <h2>Sản phẩm bán chạy</h2>
+            <span>Top 5 theo doanh số</span>
+          </div>
+          <div className="products-list">
+            {bestSellingProducts.length === 0 ? (
+              <div className="empty-state">Chưa có dữ liệu sản phẩm bán chạy.</div>
+            ) : (
+              bestSellingProducts.map((product, index) => (
+                <div key={product.id} className="product-row">
+                  <div>
+                    <span className="product-rank">#{index + 1}</span>
+                    <div className="product-name">{product.name}</div>
+                    <div className="product-brand">{product.brand}</div>
+                  </div>
+                  <div className="product-sales">{product.salesCount} bán</div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>

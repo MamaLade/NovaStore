@@ -22,10 +22,124 @@
   margin-bottom: 32px;
 }
 
+.dashboard-charts {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.chart-card,
+.top-products-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.chart-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.chart-header span {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.chart-body {
+  padding: 8px 0 0;
+}
+
+.chart-grid {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  min-height: 220px;
+}
+
+.chart-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.bar-fill {
+  width: 100%;
+  background: linear-gradient(180deg, #4f46e5 0%, #818cf8 100%);
+  border-radius: 12px 12px 0 0;
+  transition: height 0.3s ease;
+}
+
+.chart-label {
+  font-size: 12px;
+  color: #64748b;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.chart-value {
+  font-size: 12px;
+  color: #475569;
+  text-align: center;
+}
+
+.products-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.product-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.product-rank {
+  font-weight: 700;
+  color: #4338ca;
+  margin-right: 10px;
+}
+
+.product-name {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.product-brand {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.product-sales {
+  font-weight: 700;
+  color: #0f766e;
+}
+
 @media (max-width: 768px) {
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
+  }
+
+  .dashboard-charts {
+    grid-template-columns: 1fr;
   }
 
   .dashboard h1 {
@@ -39,6 +153,10 @@
 
 @media (max-width: 480px) {
   .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-charts {
     grid-template-columns: 1fr;
   }
 

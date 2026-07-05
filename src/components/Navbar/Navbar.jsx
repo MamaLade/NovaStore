@@ -81,7 +81,7 @@ function Navbar({ openCart, search, setSearch, openAuth }) {
           {user ? (
             <div className="user-menu">
               {user.role === "admin" && (
-                <button className="admin-btn" onClick={() => navigate("/admin")} type="button">
+                <button className="admin-btn" onClick={() => navigate("/admin/users")} type="button">
                   <FaCog />
                   <span>Admin</span>
                 </button>

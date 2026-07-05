@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
-import { FaBox, FaChartBar, FaHome, FaSignOutAlt, FaUsers, FaTimes, FaBars } from "react-icons/fa";
+import { FaBox, FaChartBar, FaHome, FaSignOutAlt, FaUsers, FaTimes, FaBars, FaCommentDots } from "react-icons/fa";
 import { useCart } from "../../context/CartContext";
 import "./AdminLayout.css";
 
 function AdminLayout() {
-  const { user, logout } = useCart();
+  const { user, logout, chatUnreadCount } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [location.pathname, location.search]);
 
   if (user?.role !== "admin") {
     return (
@@ -30,6 +34,7 @@ function AdminLayout() {
     { path: "/admin/products", icon: FaBox, label: "Sản phẩm" },
     { path: "/admin/orders", icon: FaHome, label: "Đơn hàng" },
     { path: "/admin/users", icon: FaUsers, label: "Người dùng" },
+    { path: "/admin/chat", icon: FaCommentDots, label: "Chat" },
   ];
 
   return (
@@ -67,6 +72,9 @@ function AdminLayout() {
               >
                 <Icon />
                 <span>{item.label}</span>
+                {item.path === "/admin/chat" && chatUnreadCount > 0 && (
+                  <span className="admin-badge">{chatUnreadCount}</span>
+                )}
               </Link>
             );
           })}
@@ -80,10 +88,9 @@ function AdminLayout() {
         </div>
       </aside>
 
-      <div className="admin-overlay" 
-           onClick={() => setSidebarOpen(false)}
-           style={{ display: sidebarOpen ? 'block' : 'none' }}
-      ></div>
+      {sidebarOpen && (
+        <div className="admin-overlay" onClick={() => setSidebarOpen(false)} />
+      )}
 
       <main className="admin-main">
         <Outlet />

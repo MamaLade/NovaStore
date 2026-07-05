@@ -177,7 +177,19 @@ function Products() {
                 <td>{product.brand}</td>
                 <td>
                   <span className={`category-badge ${product.category}`}>
-                    {product.category === "ao" ? "Áo" : product.category === "quan" ? "Quần" : "Giày"}
+                    {product.category === "ao"
+                      ? "Áo"
+                      : product.category === "quan"
+                      ? "Quần"
+                      : product.category === "giay"
+                      ? "Giày"
+                      : product.category === "tui"
+                      ? "Túi xách"
+                      : product.category === "mu"
+                      ? "Mũ lưỡi trai"
+                      : product.category === "vong"
+                      ? "Vòng tay"
+                      : "Khác"}
                   </span>
                 </td>
                 <td>{formatCurrency(product.price)}</td>
@@ -274,6 +286,9 @@ function Products() {
                     <option value="ao">Áo</option>
                     <option value="quan">Quần</option>
                     <option value="giay">Giày</option>
+                    <option value="tui">Túi xách</option>
+                    <option value="mu">Mũ lưỡi trai</option>
+                    <option value="vong">Vòng tay</option>
                   </select>
                 </div>
 

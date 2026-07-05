@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { FaEnvelope, FaLock, FaTimes, FaUser } from "react-icons/fa";
+import { FaEnvelope, FaLock, FaTimes, FaShoppingBag, FaUser, FaEye, FaEyeSlash, FaGoogle, FaFacebook } from "react-icons/fa";
 import { useCart } from "../../context/CartContext";
 import { useToast } from "../../context/ToastContext";
 import "./AuthModal.css";
@@ -9,6 +9,8 @@ function AuthModal({ mode = "login", onClose, onSwitchMode }) {
   const { showToast } = useToast();
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [message, setMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const isRegister = mode === "register";
 
@@ -21,21 +23,29 @@ function AuthModal({ mode = "login", onClose, onSwitchMode }) {
     setMessage("");
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsLoading(true);
+    setMessage("");
+
+    // Simulate network delay for better UX
+    await new Promise(resolve => setTimeout(resolve, 800));
 
     if (isRegister && form.name.trim().length < 2) {
       setMessage("Vui lòng nhập họ tên hợp lệ.");
+      setIsLoading(false);
       return;
     }
 
     if (!form.email.includes("@")) {
       setMessage("Email chưa hợp lệ.");
+      setIsLoading(false);
       return;
     }
 
     if (form.password.length < 6) {
       setMessage("Mật khẩu cần ít nhất 6 ký tự.");
+      setIsLoading(false);
       return;
     }
 
@@ -44,10 +54,11 @@ function AuthModal({ mode = "login", onClose, onSwitchMode }) {
 
     if (result.ok) {
       showToast(result.message, "success");
-      onClose?.();
+      setTimeout(() => onClose?.(), 300);
     } else {
       showToast(result.message, "error");
     }
+    setIsLoading(false);
   };
 
   return (
@@ -57,52 +68,96 @@ function AuthModal({ mode = "login", onClose, onSwitchMode }) {
           <FaTimes />
         </button>
 
-        <div className="auth-heading">
-          <span>Tài khoản NovaStore</span>
-          <h2>{title}</h2>
-          <p>{isRegister ? "Nhận ưu đãi và theo dõi đơn hàng dễ dàng hơn." : "Tiếp tục mua sắm và quản lý đơn hàng của bạn."}</p>
+        <div className="auth-brand-panel">
+          <div className="brand-badge">
+            <FaShoppingBag />
+          </div>
+          <div className="brand-copy">
+            <span>NovaStore</span>
+            <h2>{title}</h2>
+            <p>{isRegister ? "Tạo tài khoản để nhận ưu đãi và quản lý đơn hàng." : "Đăng nhập để tiếp tục mua sắm nhanh chóng."}</p>
+            <ul>
+              <li>Thanh toán nhanh chóng</li>
+              <li>Quản lý đơn hàng dễ dàng</li>
+              <li>Ưu đãi riêng cho thành viên</li>
+            </ul>
+          </div>
         </div>
 
-        {isRegister && (
+        <div className="auth-form-panel">
+          {isRegister && (
+            <label className="auth-field">
+              <FaUser />
+              <input
+                value={form.name}
+                placeholder="Họ và tên"
+                onChange={(e) => updateField("name", e.target.value)}
+              />
+            </label>
+          )}
+
           <label className="auth-field">
-            <FaUser />
+            <FaEnvelope />
             <input
-              value={form.name}
-              placeholder="Họ và tên"
-              onChange={(e) => updateField("name", e.target.value)}
+              value={form.email}
+              placeholder="Email"
+              type="email"
+              onChange={(e) => updateField("email", e.target.value)}
             />
           </label>
-        )}
 
-        <label className="auth-field">
-          <FaEnvelope />
-          <input
-            value={form.email}
-            placeholder="Email"
-            type="email"
-            onChange={(e) => updateField("email", e.target.value)}
-          />
-        </label>
+          <label className="auth-field">
+            <FaLock />
+            <input
+              value={form.password}
+              placeholder="Mật khẩu"
+              type={showPassword ? "text" : "password"}
+              onChange={(e) => updateField("password", e.target.value)}
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </label>
 
-        <label className="auth-field">
-          <FaLock />
-          <input
-            value={form.password}
-            placeholder="Mật khẩu"
-            type="password"
-            onChange={(e) => updateField("password", e.target.value)}
-          />
-        </label>
+          {message && <p className="auth-message">{message}</p>}
 
-        {message && <p className="auth-message">{message}</p>}
+          <button className="auth-submit" type="submit" disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <span className="spinner"></span>
+                {isRegister ? "Đang đăng ký..." : "Đang đăng nhập..."}
+              </>
+            ) : (
+              isRegister ? "Đăng ký" : "Đăng nhập"
+            )}
+          </button>
 
-        <button className="auth-submit" type="submit">
-          {isRegister ? "Đăng ký" : "Đăng nhập"}
-        </button>
+          <div className="auth-divider">
+            <span>hoặc tiếp tục với</span>
+          </div>
 
-        <button className="auth-switch" type="button" onClick={onSwitchMode}>
-          {isRegister ? "Đã có tài khoản? Đăng nhập" : "Chưa có tài khoản? Đăng ký"}
-        </button>
+          <div className="auth-social-list">
+            <button className="auth-social-btn google" type="button" disabled>
+              <FaGoogle /> Google
+            </button>
+            <button className="auth-social-btn facebook" type="button" disabled>
+              <FaFacebook /> Facebook
+            </button>
+          </div>
+
+          <p className="auth-note">
+            Đăng nhập nhanh hơn, quản lý đơn hàng và sử dụng voucher dễ dàng.
+          </p>
+
+          <button className="auth-switch" type="button" onClick={onSwitchMode}>
+            {isRegister ? "Đã có tài khoản? Đăng nhập" : "Chưa có tài khoản? Đăng ký"}
+          </button>
+        </div>
       </form>
     </div>
   );

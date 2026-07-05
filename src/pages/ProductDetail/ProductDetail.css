@@ -1,11 +1,11 @@
 .detail-page {
-  padding: 32px 5% 56px;
+  padding: 40px 5% 64px;
 }
 
 .detail {
   display: grid;
-  gap: 28px;
-  grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.1fr);
+  gap: 32px;
+  grid-template-columns: minmax(280px, 0.95fr) minmax(0, 1.05fr);
   margin: 0 auto;
   max-width: 1200px;
 }
@@ -15,7 +15,7 @@
 .related {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border-radius: 24px;
   box-shadow: var(--shadow-card);
 }
 
@@ -42,25 +42,24 @@
   font-size: 13px;
   font-weight: 800;
   text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .right h2 {
   color: var(--color-text);
-  font-size: 32px;
-  line-height: 1.18;
+  font-size: 34px;
+  line-height: 1.16;
 }
 
 .detail-rating,
-.detail-price-row,
-.shop-box-meta {
+.detail-price-row {
   align-items: center;
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
 }
 
-.detail-rating span,
-.shop-box-meta span {
+.detail-rating span {
   align-items: center;
   color: var(--color-text-muted);
   display: inline-flex;
@@ -121,32 +120,20 @@
   color: var(--color-primary);
 }
 
-.shop-box {
-  background: var(--color-shop-box-bg);
-  border: 1px solid var(--color-shop-box-border);
+.brand-box {
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   padding: 14px;
-  transition: border-color var(--transition), box-shadow var(--transition);
 }
 
-.shop-box-link {
-  cursor: pointer;
-  display: block;
-}
-
-.shop-box-link:hover {
-  border-color: var(--color-secondary);
-  box-shadow: var(--shadow-card);
-}
-
-.shop-box-main {
+.brand-box-main {
   align-items: center;
   display: flex;
   gap: 12px;
-  margin-bottom: 12px;
 }
 
-.shop-box-icon {
+.brand-box-icon {
   align-items: center;
   background: var(--color-secondary);
   border-radius: var(--radius-sm);
@@ -157,12 +144,12 @@
   width: 42px;
 }
 
-.shop-box h3 {
+.brand-box h3 {
   color: var(--color-text);
   font-size: 17px;
 }
 
-.shop-box p {
+.brand-box p {
   align-items: center;
   color: var(--color-text-muted);
   display: flex;
@@ -204,19 +191,19 @@
 
 .related {
   grid-column: 1 / -1;
-  margin-top: 8px;
-  padding: 20px;
+  margin-top: 20px;
+  padding: 24px;
 }
 
 .related h3 {
-  margin-bottom: 14px;
+  margin-bottom: 18px;
   color: var(--color-text);
 }
 
 .grid {
   display: grid;
-  gap: 14px;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
 .mini-card {

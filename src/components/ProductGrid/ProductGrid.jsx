@@ -44,11 +44,22 @@ function ProductGrid({ category, setCategory, search, sort, setSort }) {
 
   return (
     <section className="product-section" id="products">
+      <div className="product-header">
+        <div>
+          <p className="product-label">Thời trang</p>
+          <h2>Khám phá sản phẩm mới</h2>
+          <span>{filtered.length} sản phẩm phù hợp với lựa chọn của bạn</span>
+        </div>
+      </div>
+
       <div className="filter-bar">
-        <button onClick={() => setCategory("all")}>Tất cả</button>
-        <button onClick={() => setCategory("ao")}>Áo</button>
-        <button onClick={() => setCategory("quan")}>Quần</button>
-        <button onClick={() => setCategory("giay")}>Giày</button>
+        <button className={category === "all" ? "active" : ""} onClick={() => setCategory("all")}>Tất cả</button>
+        <button className={category === "ao" ? "active" : ""} onClick={() => setCategory("ao")}>Áo</button>
+        <button className={category === "quan" ? "active" : ""} onClick={() => setCategory("quan")}>Quần</button>
+        <button className={category === "giay" ? "active" : ""} onClick={() => setCategory("giay")}>Giày</button>
+        <button className={category === "tui" ? "active" : ""} onClick={() => setCategory("tui")}>Túi xách</button>
+        <button className={category === "mu" ? "active" : ""} onClick={() => setCategory("mu")}>Mũ lưỡi trai</button>
+        <button className={category === "vong" ? "active" : ""} onClick={() => setCategory("vong")}>Vòng tay</button>
 
         <select value={sort} onChange={(e) => setSort(e.target.value)}>
           <option value="default">Mặc định</option>

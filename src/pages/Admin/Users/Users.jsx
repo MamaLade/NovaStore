@@ -1,28 +1,48 @@
 import { useState, useMemo } from "react";
-import { FaEdit, FaSearch, FaTrash, FaUserShield } from "react-icons/fa";
+import { FaCommentDots, FaEdit, FaSearch, FaTrash, FaUserShield, FaPlus } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import { useCart } from "../../../context/CartContext";
 import "./Users.css";
 
 function Users() {
-  const { users, updateUserRole, deleteUser } = useCart();
+  const navigate = useNavigate();
+  const { users, updateUserRole, deleteUser, createUser } = useCart();
   const [search, setSearch] = useState("");
+  const [originFilter, setOriginFilter] = useState("all");
   const [editingUser, setEditingUser] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    password: "",
     role: "user",
   });
 
+  const websiteUsers = useMemo(() => {
+    return (users || []).filter((user) => user.origin === "website");
+  }, [users]);
+
+  const adminCreatedUsers = useMemo(() => {
+    return (users || []).filter((user) => user.origin === "admin");
+  }, [users]);
+
   const filteredUsers = useMemo(() => {
-    if (!search) return users;
-    const keyword = search.toLowerCase();
-    return users.filter(
+    const list = users || [];
+    const cleanedSearch = search.toLowerCase().trim();
+    let result = list;
+
+    if (originFilter !== "all") {
+      result = result.filter((user) => user.origin === originFilter);
+    }
+
+    if (!cleanedSearch) return result;
+
+    return result.filter(
       (user) =>
-        user.name?.toLowerCase().includes(keyword) ||
-        user.email?.toLowerCase().includes(keyword)
+        user.name?.toLowerCase().includes(cleanedSearch) ||
+        user.email?.toLowerCase().includes(cleanedSearch)
     );
-  }, [users, search]);
+  }, [users, search, originFilter]);
 
   const handleOpenModal = (user = null) => {
     if (user) {
@@ -37,6 +57,7 @@ function Users() {
       setFormData({
         name: "",
         email: "",
+        password: "",
         role: "user",
       });
     }
@@ -52,6 +73,13 @@ function Users() {
     e.preventDefault();
     if (editingUser) {
       updateUserRole(editingUser.id, formData.role);
+    } else {
+      createUser({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password || "123456",
+        role: formData.role,
+      });
     }
     handleCloseModal();
   };
@@ -72,7 +100,48 @@ function Users() {
   return (
     <div className="admin-users-page">
       <div className="admin-users-header">
-        <h1>Quản lý người dùng</h1>
+        <div>
+          <h1>Quản lý người dùng</h1>
+          <p>Quản lý vai trò và xem danh sách người dùng đã đăng ký thực tế trên web.</p>
+        </div>
+        <button className="btn-create-user" onClick={() => handleOpenModal()}>
+          <FaPlus /> Thêm người dùng
+        </button>
+      </div>
+
+      <div className="admin-users-summary">
+        <div className="summary-card">
+          <span>Đã đăng ký trên web</span>
+          <strong>{websiteUsers.length}</strong>
+        </div>
+        <div className="summary-card">
+          <span>Được tạo bởi admin</span>
+          <strong>{adminCreatedUsers.length}</strong>
+        </div>
+      </div>
+
+      <div className="admin-users-filters">
+        <button
+          className={originFilter === "all" ? "active" : ""}
+          onClick={() => setOriginFilter("all")}
+          type="button"
+        >
+          Tất cả
+        </button>
+        <button
+          className={originFilter === "website" ? "active" : ""}
+          onClick={() => setOriginFilter("website")}
+          type="button"
+        >
+          Website
+        </button>
+        <button
+          className={originFilter === "admin" ? "active" : ""}
+          onClick={() => setOriginFilter("admin")}
+          type="button"
+        >
+          Admin
+        </button>
       </div>
 
       <div className="admin-users-search">
@@ -92,6 +161,7 @@ function Users() {
               <th>ID</th>
               <th>Tên</th>
               <th>Email</th>
+              <th>Nguồn</th>
               <th>Vai trò</th>
               <th>Hành động</th>
             </tr>
@@ -99,7 +169,7 @@ function Users() {
           <tbody>
             {filteredUsers.length === 0 ? (
               <tr>
-                <td colSpan="5" className="empty-state">
+                <td colSpan="6" className="empty-state">
                   Không có người dùng nào
                 </td>
               </tr>
@@ -109,26 +179,34 @@ function Users() {
                   <td>#{user.id}</td>
                   <td>{user.name || "N/A"}</td>
                   <td>{user.email || "N/A"}</td>
+                  <td>{user.origin === "website" ? "Website" : "Admin"}</td>
                   <td>{getRoleBadge(user.role)}</td>
                   <td>
-                    <div className="action-buttons">
-                      <button
-                        className="btn-edit"
-                        onClick={() => handleOpenModal(user)}
-                        title="Sửa vai trò"
-                      >
-                        <FaEdit />
-                      </button>
-                      {user.role !== "admin" && (
+                                    <div className="action-buttons">
                         <button
-                          className="btn-delete"
-                          onClick={() => handleDelete(user.id)}
-                          title="Xóa"
+                          className="btn-edit"
+                          onClick={() => handleOpenModal(user)}
+                          title="Sửa vai trò"
                         >
-                          <FaTrash />
+                          <FaEdit />
                         </button>
-                      )}
-                    </div>
+                        <button
+                          className="btn-view-chat"
+                          onClick={() => navigate(`/admin/chat?thread=user-${user.id}`)}
+                          title="Xem chat"
+                        >
+                          <FaCommentDots />
+                        </button>
+                        {user.role !== "admin" && (
+                          <button
+                            className="btn-delete"
+                            onClick={() => handleDelete(user.id)}
+                            title="Xóa"
+                          >
+                            <FaTrash />
+                          </button>
+                        )}
+                      </div>
                   </td>
                 </tr>
               ))
@@ -140,15 +218,16 @@ function Users() {
       {showModal && (
         <div className="modal-overlay" onClick={handleCloseModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h2>Sửa vai trò người dùng</h2>
+            <h2>{editingUser ? "Sửa vai trò người dùng" : "Thêm người dùng mới"}</h2>
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label>Tên</label>
                 <input
                   type="text"
                   value={formData.name}
-                  disabled
-                  className="disabled-input"
+                  disabled={Boolean(editingUser)}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  required
                 />
               </div>
 
@@ -157,10 +236,23 @@ function Users() {
                 <input
                   type="email"
                   value={formData.email}
-                  disabled
-                  className="disabled-input"
+                  disabled={Boolean(editingUser)}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  required
                 />
               </div>
+
+              {!editingUser && (
+                <div className="form-group">
+                  <label>Mật khẩu</label>
+                  <input
+                    type="password"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    placeholder="Mật khẩu mặc định 123456"
+                  />
+                </div>
+              )}
 
               <div className="form-group">
                 <label>Vai trò</label>
@@ -178,7 +270,7 @@ function Users() {
                   Hủy
                 </button>
                 <button type="submit" className="btn-primary">
-                  Cập nhật
+                  {editingUser ? "Cập nhật" : "Tạo người dùng"}
                 </button>
               </div>
             </form>

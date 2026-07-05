@@ -113,6 +113,8 @@ export function CartProvider({ children }) {
           email: "admin@novastore.com",
           password: "admin123",
           role: "admin",
+          origin: "admin",
+          createdAt: new Date().toISOString(),
         }
       ];
     }
@@ -125,6 +127,29 @@ export function CartProvider({ children }) {
     return saved ? JSON.parse(saved) : products;
   });
 
+  const [guestId] = useState(() => {
+    const existing = localStorage.getItem("novastore_guest_id");
+    if (existing) return existing;
+    const id = `guest-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+    localStorage.setItem("novastore_guest_id", id);
+    return id;
+  });
+
+  const [chatThreads, setChatThreads] = useState(() => {
+    const saved = readStorageList("novastore_chat_threads");
+    return saved.length ? saved : [];
+  });
+
+  const currentChatThreadId = user?.role !== "admin" ? `user-${user?.id || guestId}` : null;
+  const currentChatThread = currentChatThreadId
+    ? chatThreads.find((thread) => thread.id === currentChatThreadId)
+    : null;
+
+  const chatUnreadCount = useMemo(
+    () => chatThreads.reduce((total, thread) => total + (thread.unreadCount || 0), 0),
+    [chatThreads]
+  );
+
   useEffect(() => {
     const cartData = readStorageList("novastore_cart");
     dispatch({ type: "LOAD", payload: cartData });
@@ -133,6 +158,96 @@ export function CartProvider({ children }) {
   useEffect(() => {
     localStorage.setItem("novastore_cart", JSON.stringify(state.cart));
   }, [state.cart]);
+
+  useEffect(() => {
+    localStorage.setItem("novastore_chat_threads", JSON.stringify(chatThreads));
+  }, [chatThreads]);
+
+  const getCurrentThreadId = () => {
+    if (user?.role === "admin") return null;
+    return user?.id ? `user-${user.id}` : guestId;
+  };
+
+  const sendCustomerChatMessage = (text) => {
+    const threadId = getCurrentThreadId();
+    if (!threadId) return;
+    const userMessage = {
+      id: Date.now(),
+      sender: "user",
+      text,
+      time: new Date().toISOString(),
+      userName: user?.name || "Khách",
+      userEmail: user?.email || "guest",
+      userId: user?.id || null,
+    };
+
+    const botReply = {
+      id: Date.now() + 1,
+      sender: "bot",
+      text: "Tin nhắn đã được gửi đến admin. Vui lòng đợi phản hồi.",
+      time: new Date().toISOString(),
+    };
+
+    setChatThreads((current) => {
+      const index = current.findIndex((thread) => thread.id === threadId);
+      if (index === -1) {
+        return [
+          ...current,
+          {
+            id: threadId,
+            userId: user?.id || null,
+            userEmail: user?.email || "guest",
+            userName: user?.name || "Khách",
+            messages: [userMessage, botReply],
+            unreadCount: 1,
+          },
+        ];
+      }
+
+      return current.map((thread) =>
+        thread.id === threadId
+          ? {
+              ...thread,
+              messages: [...thread.messages, userMessage, botReply],
+              unreadCount: (thread.unreadCount || 0) + 1,
+            }
+          : thread
+      );
+    });
+  };
+
+  const clearChatUnread = (threadId) => {
+    if (!threadId) return;
+    setChatThreads((current) => {
+      let modified = false;
+      const next = current.map((thread) => {
+        if (thread.id === threadId && thread.unreadCount > 0) {
+          modified = true;
+          return { ...thread, unreadCount: 0 };
+        }
+        return thread;
+      });
+      return modified ? next : current;
+    });
+  };
+
+  const sendAdminChatMessage = (text, threadId) => {
+    if (!threadId) return;
+    const adminMessage = {
+      id: Date.now(),
+      sender: "admin",
+      text,
+      time: new Date().toISOString(),
+    };
+
+    setChatThreads((current) =>
+      current.map((thread) =>
+        thread.id === threadId
+          ? { ...thread, messages: [...thread.messages, adminMessage] }
+          : thread
+      )
+    );
+  };
 
   useEffect(() => {
     localStorage.setItem("novastore_orders", JSON.stringify(orders));
@@ -225,10 +340,14 @@ export function CartProvider({ children }) {
       email: cleanEmail,
       password,
       role: "user",
+      origin: "website",
+      createdAt: new Date().toISOString(),
     };
 
     setUsers((current) => [...current, newUser]);
-    setUser({ id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role });
+    if (!user || user.role !== "admin") {
+      setUser({ id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role });
+    }
 
     return { ok: true, message: "Đăng ký thành công." };
   };
@@ -250,6 +369,27 @@ export function CartProvider({ children }) {
       role: found.role || "user" 
     });
     return { ok: true, message: "Đăng nhập thành công." };
+  };
+
+  const createUser = ({ name, email, password, role }) => {
+    const cleanEmail = email.trim().toLowerCase();
+    const exists = users.some((item) => item.email === cleanEmail);
+    if (exists) {
+      return { ok: false, message: "Email này đã tồn tại." };
+    }
+
+    const newUser = {
+      id: Date.now(),
+      name: name.trim(),
+      email: cleanEmail,
+      password: password || "123456",
+      role: role || "user",
+      origin: role === "admin" ? "admin" : "website",
+      createdAt: new Date().toISOString(),
+    };
+
+    setUsers((current) => [...current, newUser]);
+    return { ok: true, message: "Đã tạo người dùng mới." };
   };
 
   const updateProfile = (profile) => {
@@ -360,6 +500,13 @@ export function CartProvider({ children }) {
         shippingFee,
         grandTotal,
         orders,
+        chatThreads,
+        currentChatThread,
+        currentChatThreadId,
+        chatUnreadCount,
+        sendCustomerChatMessage,
+        sendAdminChatMessage,
+        clearChatUnread,
         setOrders,
         wishlist,
         wishlistCount,
@@ -378,6 +525,7 @@ export function CartProvider({ children }) {
         updateOrderStatus,
         updateUserRole,
         deleteUser,
+        createUser,
         reviews,
         addReview,
         getProductReviews,

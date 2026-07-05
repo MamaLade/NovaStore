@@ -1,14 +1,28 @@
 .footer {
-  background: #1a1a2e;
+  background: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 50%, #1a1a2e 100%);
   color: white;
-  padding: 48px 0 24px;
+  padding: 60px 0 30px;
   margin-top: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.5), transparent);
 }
 
 .footer-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 5%;
+  position: relative;
+  z-index: 1;
 }
 
 .footer-content {
@@ -20,9 +34,21 @@
 
 .footer-section h3 {
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 20px;
-  color: #4361ee;
+  color: white;
+  position: relative;
+}
+
+.footer-section h3::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 2px;
 }
 
 .footer-logo {
@@ -121,13 +147,24 @@
   padding-left: 16px;
   position: relative;
   margin-bottom: 6px;
+  transition: all 0.3s ease;
+}
+
+.policy-item li:hover {
+  color: white;
+  transform: translateX(5px);
 }
 
 .policy-item li::before {
   content: "•";
   position: absolute;
   left: 0;
-  color: #4361ee;
+  color: #667eea;
+  transition: color 0.3s ease;
+}
+
+.policy-item li:hover::before {
+  color: #f093fb;
 }
 
 .footer-bottom {

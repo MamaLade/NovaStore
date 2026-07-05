@@ -1,16 +1,18 @@
 .card {
-  background: var(--color-surface);
-  border-radius: var(--radius);
+  background: white;
+  border-radius: 24px;
   overflow: hidden;
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(102, 126, 234, 0.1);
   display: flex;
   flex-direction: column;
-  transition: var(--transition);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
 }
 
 .card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-hover);
+  transform: translateY(-12px) scale(1.02);
+  box-shadow: 0 24px 48px rgba(102, 126, 234, 0.2);
+  border-color: rgba(102, 126, 234, 0.3);
 }
 
 .image-box {
@@ -20,79 +22,97 @@
 
 .image-box img {
   width: 100%;
-  height: 210px;
+  height: 280px;
   object-fit: cover;
-  transition: 0.3s;
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .card:hover .image-box img {
-  transform: scale(1.05);
+  transform: scale(1.1);
 }
 
-.discount {
+.discount,
+.product-badge {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  background: var(--color-primary);
+  top: 16px;
+  left: 16px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
   font-size: 12px;
-  padding: 4px 8px;
-  border-radius: 6px;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  z-index: 2;
+}
+
+.product-badge {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
 }
 
 .heart-button {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 34px;
-  height: 34px;
-  background: var(--color-surface);
+  top: 16px;
+  right: 16px;
+  width: 42px;
+  height: 42px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
   border-radius: 50%;
   color: var(--color-text-placeholder);
   cursor: pointer;
   display: grid;
   place-items: center;
-  transition: 0.2s;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 2;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .heart-button:hover {
-  color: var(--color-primary);
-  transform: scale(1.08);
+  color: #f5576c;
+  transform: scale(1.15);
+  box-shadow: 0 8px 20px rgba(245, 87, 108, 0.3);
 }
 
 .heart-button.liked {
-  color: var(--color-primary);
+  color: #f5576c;
+  animation: heartBeat 0.3s ease;
+}
+
+@keyframes heartBeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.3); }
 }
 
 .info {
-  padding: 12px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   flex: 1;
 }
 
 .name {
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.4;
-  height: 40px;
-  overflow: hidden;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.35;
   color: var(--color-text);
+  margin-bottom: 10px;
 }
 
-.shop-line {
+.product-meta {
   align-items: center;
   color: var(--color-text-muted);
   display: flex;
-  font-size: 12px;
-  gap: 6px;
-  margin: 6px 0 2px;
+  font-size: 13px;
+  gap: 8px;
+  margin: 6px 0 12px;
 }
 
 .option-preview {
   display: flex;
-  gap: 6px;
-  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
 .option-preview span {
@@ -100,32 +120,35 @@
   border-radius: 999px;
   color: var(--color-text-secondary);
   font-size: 12px;
-  padding: 4px 8px;
+  padding: 6px 10px;
 }
 
 .desc {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--color-text-muted);
-  margin: 6px 0 10px;
-  line-height: 1.4;
+  margin: 0 0 14px;
+  line-height: 1.75;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
 .meta {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--color-text-muted);
-  margin-bottom: 8px;
+  gap: 10px;
+  margin-bottom: 14px;
 }
 
 .rating {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
 
 .star {
@@ -134,15 +157,16 @@
 
 .price-box {
   display: flex;
-  gap: 8px;
+  justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  gap: 10px;
+  margin-bottom: 16px;
 }
 
 .price {
   color: var(--color-primary);
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 19px;
+  font-weight: 900;
 }
 
 .old-price {
@@ -154,20 +178,20 @@
 .btn {
   margin-top: auto;
   width: 100%;
-  padding: 10px;
+  padding: 13px;
   border: none;
   background: linear-gradient(90deg, var(--color-primary), #ff7337);
   color: white;
-  border-radius: var(--radius-sm);
-  font-weight: 600;
+  border-radius: 16px;
+  font-weight: 700;
   cursor: pointer;
   display: flex;
   justify-content: center;
-  gap: 6px;
-  transition: 0.2s;
+  gap: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(255, 77, 45, 0.25);
+  box-shadow: 0 10px 22px rgba(255, 77, 45, 0.18);
 }

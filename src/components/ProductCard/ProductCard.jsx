@@ -1,5 +1,5 @@
 import "./ProductCard.css";
-import { FaHeart, FaShoppingCart, FaStar, FaStore } from "react-icons/fa";
+import { FaHeart, FaShoppingCart, FaStar, FaTag } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { formatCurrency } from "../../utils/formatters";
 import { useCart } from "../../context/CartContext";
@@ -46,9 +46,9 @@ function ProductCard({
           <h3 className="name">{product.name}</h3>
         </Link>
 
-        <div className="shop-line">
-          <FaStore />
-          <span>{product.shop?.name}</span>
+        <div className="product-meta">
+          <FaTag />
+          <span>{product.brand}</span>
         </div>
 
         {product.description && (

@@ -34,8 +34,16 @@
   height: 100vh;
   left: 0;
   top: 0;
-  z-index: 1000;
+  z-index: 2000;
   transition: transform 0.3s ease;
+}
+
+.admin-main {
+  flex: 1;
+  margin-left: 260px;
+  padding: 32px;
+  position: relative;
+  z-index: 0;
 }
 
 .admin-sidebar-close {
@@ -93,6 +101,21 @@
 .admin-nav-item.active {
   background: #4361ee;
   color: white;
+}
+
+.admin-badge {
+  margin-left: auto;
+  min-width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: #ef4444;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
 }
 
 .admin-sidebar-footer {

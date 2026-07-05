@@ -101,21 +101,29 @@ function ProductDetail() {
             </div>
           </div>
 
-          {product.shop && (
-            <Link to={`/shop/${product.shop.id}`} className="shop-box shop-box-link">
-              <div className="shop-box-main">
-                <div className="shop-box-icon"><FaStore /></div>
-                <div>
-                  <h3>{product.shop.name}</h3>
-                  <p><FaMapMarkerAlt /> {product.shop.location}</p>
-                </div>
+          <div className="brand-box">
+            <div className="brand-box-main">
+              <div className="brand-box-icon"><FaStore /></div>
+              <div>
+                <h3>{product.brand}</h3>
+                <p>
+                  {product.category === "ao"
+                    ? "Áo"
+                    : product.category === "quan"
+                    ? "Quần"
+                    : product.category === "giay"
+                    ? "Giày"
+                    : product.category === "tui"
+                    ? "Túi xách"
+                    : product.category === "mu"
+                    ? "Mũ lưỡi trai"
+                    : product.category === "vong"
+                    ? "Vòng tay"
+                    : "Phụ kiện"}
+                </p>
               </div>
-              <div className="shop-box-meta">
-                <span><FaStar /> {product.shop.rating}</span>
-                <span><FaShippingFast /> {product.shop.shipping}</span>
-              </div>
-            </Link>
-          )}
+            </div>
+          </div>
 
           <div className="detail-actions">
             <button onClick={handleAddToCart}>Thêm vào giỏ</button>
@@ -140,7 +148,7 @@ function ProductDetail() {
               <Link to={`/product/${p.id}`} key={p.id} className="mini-card">
                 <img src={p.image} alt={p.name} />
                 <p>{p.name}</p>
-                <span>{p.shop?.name}</span>
+                <span>{p.brand}</span>
                 <b>{formatCurrency(p.price)}</b>
               </Link>
             ))}
