@@ -1,4 +1,49 @@
 import shops from "./shops";
+import product1 from "../assets/products/product-1.jpg";
+import product2 from "../assets/products/product-2.jpg";
+import product3 from "../assets/products/product-3.jpg";
+import product4 from "../assets/products/product-4.jpg";
+import product5 from "../assets/products/product-5.jpg";
+import product6 from "../assets/products/product-6.jpg";
+import product7 from "../assets/products/product-7.jpg";
+import product8 from "../assets/products/product-8.jpg";
+import product9 from "../assets/products/product-9.jpg";
+import product10 from "../assets/products/product-10.jpg";
+import product11 from "../assets/products/product-11.jpg";
+import product12 from "../assets/products/product-12.jpg";
+import product13 from "../assets/products/product-13.jpg";
+import product14 from "../assets/products/product-14.jpg";
+import product15 from "../assets/products/product-15.jpg";
+import product16 from "../assets/products/product-16.jpg";
+import product17 from "../assets/products/product-17.jpg";
+import product18 from "../assets/products/product-18.jpg";
+import product19 from "../assets/products/product-19.jpg";
+import product20 from "../assets/products/product-20.jpg";
+import product21 from "../assets/products/product-21.jpg";
+
+const productImages = {
+  1: product1,
+  2: product2,
+  3: product3,
+  4: product4,
+  5: product5,
+  6: product6,
+  7: product7,
+  8: product8,
+  9: product9,
+  10: product10,
+  11: product11,
+  12: product12,
+  13: product13,
+  14: product14,
+  15: product15,
+  16: product16,
+  17: product17,
+  18: product18,
+  19: product19,
+  20: product20,
+  21: product21,
+};
 
 const shopMap = Object.fromEntries(shops.map((shop) => [shop.id, shop]));
 
@@ -8,7 +53,7 @@ const products = [
     name: "Nike Hoodie Oversize",
     price: 390000,
     oldPrice: 650000,
-    image: "https://picsum.photos/seed/nike1/600/600",
+    image: productImages[1],
     rating: 4.8,
     sold: 1200,
     stock: 25,
@@ -25,7 +70,7 @@ const products = [
     name: "Áo Thun Basic Cotton",
     price: 199000,
     oldPrice: 299000,
-    image: "https://picsum.photos/seed/tee2/600/600",
+    image: productImages[2],
     rating: 4.6,
     sold: 980,
     stock: 40,
@@ -42,7 +87,7 @@ const products = [
     name: "Áo Polo Premium",
     price: 249000,
     oldPrice: 399000,
-    image: "https://picsum.photos/seed/polo3/600/600",
+    image: productImages[3],
     rating: 4.7,
     sold: 1500,
     stock: 18,
@@ -59,7 +104,7 @@ const products = [
     name: "Áo Khoác Bomber Minimal",
     price: 520000,
     oldPrice: 790000,
-    image: "https://picsum.photos/seed/bomber10/600/600",
+    image: productImages[10],
     rating: 4.8,
     sold: 760,
     stock: 16,
@@ -76,7 +121,7 @@ const products = [
     name: "Sơ Mi Oxford Công Sở",
     price: 340000,
     oldPrice: 480000,
-    image: "https://picsum.photos/seed/oxford11/600/600",
+    image: productImages[11],
     rating: 4.6,
     sold: 640,
     stock: 30,
@@ -93,7 +138,7 @@ const products = [
     name: "Quần Jean Slim Fit",
     price: 450000,
     oldPrice: 700000,
-    image: "https://picsum.photos/seed/jean4/600/600",
+    image: productImages[4],
     rating: 4.7,
     sold: 2100,
     stock: 15,
@@ -110,7 +155,7 @@ const products = [
     name: "Quần Short Thể Thao",
     price: 220000,
     oldPrice: 350000,
-    image: "https://picsum.photos/seed/short5/600/600",
+    image: productImages[5],
     rating: 4.5,
     sold: 860,
     stock: 32,
@@ -127,7 +172,7 @@ const products = [
     name: "Quần Jogger Streetwear",
     price: 320000,
     oldPrice: 500000,
-    image: "https://picsum.photos/seed/jogger6/600/600",
+    image: productImages[6],
     rating: 4.6,
     sold: 1320,
     stock: 20,
@@ -144,7 +189,7 @@ const products = [
     name: "Quần Tây Relaxed Fit",
     price: 410000,
     oldPrice: 590000,
-    image: "https://picsum.photos/seed/trouser12/600/600",
+    image: productImages[12],
     rating: 4.7,
     sold: 920,
     stock: 24,
@@ -161,7 +206,7 @@ const products = [
     name: "Quần Cargo Túi Hộp",
     price: 360000,
     oldPrice: 540000,
-    image: "https://picsum.photos/seed/cargo13/600/600",
+    image: productImages[13],
     rating: 4.5,
     sold: 710,
     stock: 21,
@@ -178,7 +223,7 @@ const products = [
     name: "Nike Air Force 1",
     price: 890000,
     oldPrice: 1200000,
-    image: "https://picsum.photos/seed/af1/600/600",
+    image: productImages[7],
     rating: 4.9,
     sold: 3200,
     stock: 12,
@@ -195,7 +240,7 @@ const products = [
     name: "Adidas Running Ultra Light",
     price: 750000,
     oldPrice: 1100000,
-    image: "https://picsum.photos/seed/run8/600/600",
+    image: productImages[8],
     rating: 4.7,
     sold: 1800,
     stock: 28,
@@ -212,7 +257,7 @@ const products = [
     name: "Puma Casual Daily",
     price: 590000,
     oldPrice: 850000,
-    image: "https://picsum.photos/seed/puma9/600/600",
+    image: productImages[9],
     rating: 4.6,
     sold: 1400,
     stock: 22,
@@ -229,7 +274,7 @@ const products = [
     name: "New Balance 530 Retro",
     price: 820000,
     oldPrice: 1150000,
-    image: "https://picsum.photos/seed/nb530/600/600",
+    image: productImages[14],
     rating: 4.8,
     sold: 1740,
     stock: 19,
@@ -246,7 +291,7 @@ const products = [
     name: "Sandal Outdoor Grip",
     price: 310000,
     oldPrice: 460000,
-    image: "https://picsum.photos/seed/sandal15/600/600",
+    image: productImages[15],
     rating: 4.4,
     sold: 530,
     stock: 35,
@@ -263,7 +308,7 @@ const products = [
     name: "Túi Tote Da Mini",
     price: 420000,
     oldPrice: 550000,
-    image: "https://picsum.photos/seed/bag16/600/600",
+    image: productImages[16],
     rating: 4.6,
     sold: 640,
     stock: 24,
@@ -280,7 +325,7 @@ const products = [
     name: "Balo Streetwear Khóa Kim Loại",
     price: 520000,
     oldPrice: 700000,
-    image: "https://picsum.photos/seed/bag17/600/600",
+    image: productImages[17],
     rating: 4.7,
     sold: 580,
     stock: 18,
@@ -297,7 +342,7 @@ const products = [
     name: "Mũ Lưỡi Trai Classic",
     price: 190000,
     oldPrice: 260000,
-    image: "https://picsum.photos/seed/hat18/600/600",
+    image: productImages[18],
     rating: 4.5,
     sold: 710,
     stock: 45,
@@ -314,7 +359,7 @@ const products = [
     name: "Mũ Snapback Logo",
     price: 230000,
     oldPrice: 320000,
-    image: "https://picsum.photos/seed/hat19/600/600",
+    image: productImages[19],
     rating: 4.4,
     sold: 520,
     stock: 30,
@@ -331,7 +376,7 @@ const products = [
     name: "Vòng Tay Dây Da",
     price: 180000,
     oldPrice: 240000,
-    image: "https://picsum.photos/seed/bracelet20/600/600",
+    image: productImages[20],
     rating: 4.3,
     sold: 360,
     stock: 50,
@@ -348,7 +393,7 @@ const products = [
     name: "Vòng Tay Charm Kim Loại",
     price: 210000,
     oldPrice: 280000,
-    image: "https://picsum.photos/seed/bracelet21/600/600",
+    image: productImages[21],
     rating: 4.6,
     sold: 430,
     stock: 38,
